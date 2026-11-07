@@ -9,6 +9,7 @@ import { History } from "./components/History";
 import { LogoPreview } from "./components/LogoPreview";
 import { Progression } from "./components/Progression";
 import { Reminders } from "./components/Reminders";
+import { Privacy } from "./components/Privacy";
 
 export const router = createBrowserRouter([
   {
@@ -26,6 +27,10 @@ export const router = createBrowserRouter([
       { path: "/history", Component: History },
       { path: "/reminders", Component: Reminders },
     ],
+  },
+  {
+    path: "/privacy",
+    Component: Privacy,
   },
   {
     path: "/logo",
