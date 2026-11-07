@@ -6,7 +6,7 @@ import { isNative } from "./platform";
  * mirrored to native storage (Preferences), which the OS won't clear the way it
  * can clear WebView storage. On launch, native storage restores localStorage.
  */
-const MIRRORED_KEYS = ["daily-brief-data", "daily-brief-reminders", "daily-brief-reminders-setup"];
+const MIRRORED_KEYS = ["daily-brief-data", "daily-brief-reminders", "daily-brief-reminders-setup", "daily-brief-name"];
 
 export function persist(key: string, value: string): void {
   if (isNative) Preferences.set({ key, value }).catch(() => {});

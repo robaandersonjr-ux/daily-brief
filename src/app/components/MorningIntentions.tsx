@@ -3,6 +3,7 @@ import { useNavigate } from "react-router";
 import { saveIntentions, getTodayEntry, getEntryByDate, getTodayDate, toLocalDateString } from "../utils/storage";
 import { Button } from "./ui/button";
 import { motion } from "motion/react";
+import { Greeting } from "./Greeting";
 import { haptic } from "../native/haptics";
 import { setUpRemindersOnce } from "../native/reminders";
 
@@ -73,7 +74,7 @@ export function MorningIntentions() {
       {/* Header */}
       <div className="space-y-3 pt-4 px-6">
         <p className="text-white/60 font-light">
-          Good morning, <span className="text-[#AD4E14]">Rob</span>
+          <Greeting text="Good morning" />
         </p>
         <h1 className="text-[28px] leading-tight">
           <span className="text-white">Set your </span>

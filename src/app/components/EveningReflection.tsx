@@ -4,6 +4,7 @@ import { getTodayEntry, getAllEntries, saveReflection, toLocalDateString } from 
 import { haptic } from "../native/haptics";
 import { Button } from "./ui/button";
 import { motion } from "motion/react";
+import { Greeting } from "./Greeting";
 
 export function EveningReflection() {
   const navigate = useNavigate();
@@ -73,7 +74,7 @@ export function EveningReflection() {
       {/* Header */}
       <div className="space-y-3 pt-4 px-6">
         <p className="text-white/60 font-light">
-          One more step, <span className="text-[#AD4E14]">Rob</span>
+          <Greeting text="One more step" />
         </p>
         <h1 className="text-[28px] leading-tight">
           <span className="text-white">Reflect on your </span>

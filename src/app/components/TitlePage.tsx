@@ -1,10 +1,18 @@
+import { useState } from "react";
 import { useNavigate } from "react-router";
+import { getName, saveName } from "../utils/profile";
 import { Logo } from "./Logo";
 import { ArrowRight } from "lucide-react";
 import { motion } from "motion/react";
 
 export function TitlePage() {
   const navigate = useNavigate();
+  const [name, setName] = useState(getName);
+
+  const start = () => {
+    saveName(name);
+    navigate("/dashboard");
+  };
 
   return (
     <div className="min-h-screen bg-background flex flex-col pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)]">
@@ -79,6 +87,31 @@ export function TitlePage() {
             Track your progress.<br />
             Reflect and grow.
           </motion.p>
+
+          {/* Name */}
+          <motion.form
+            className="max-w-xs mx-auto"
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.6, delay: 0.7, ease: [0.16, 1, 0.3, 1] }}
+            onSubmit={(e) => {
+              e.preventDefault();
+              start();
+            }}
+          >
+            <label htmlFor="name" className="block text-[11px] text-white/40 uppercase tracking-[0.14em] font-medium mb-2">
+              What should we call you?
+            </label>
+            <input
+              id="name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="Your first name"
+              autoComplete="given-name"
+              maxLength={40}
+              className="w-full h-12 rounded-xl bg-white/[0.06] border-[0.5px] border-white/[0.08] px-4 text-center text-white placeholder:text-white/30 focus:outline-none focus:border-[#5271FF]"
+            />
+          </motion.form>
         </div>
       </div>
 
@@ -95,7 +128,7 @@ export function TitlePage() {
       >
         <div className="flex justify-end">
           <motion.button
-            onClick={() => navigate("/dashboard")}
+            onClick={start}
             className="h-14 px-8 rounded-full flex items-center justify-center gap-2 shadow-lg"
             style={{ backgroundColor: '#AD4E14' }}
             whileHover={{ scale: 1.05 }}

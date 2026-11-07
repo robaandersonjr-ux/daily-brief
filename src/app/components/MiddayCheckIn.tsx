@@ -3,6 +3,7 @@ import { useNavigate } from "react-router";
 import { saveMiddayCheckIn, getTodayEntry } from "../utils/storage";
 import { Button } from "./ui/button";
 import { motion } from "motion/react";
+import { Greeting } from "./Greeting";
 import { haptic } from "../native/haptics";
 
 export function MiddayCheckIn() {
@@ -108,7 +109,7 @@ export function MiddayCheckIn() {
       {/* Header */}
       <div className="space-y-3 pt-4 px-6">
         <p className="text-white/60 font-light">
-          Thank you, <span className="text-[#AD4E14]">Rob</span>
+          <Greeting text="Thank you" />
         </p>
         <h1 className="text-[28px] leading-tight">
           <span className="text-white">How's your </span>
