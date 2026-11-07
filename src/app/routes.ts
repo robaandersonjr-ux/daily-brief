@@ -8,6 +8,7 @@ import { EveningReflection } from "./components/EveningReflection";
 import { History } from "./components/History";
 import { LogoPreview } from "./components/LogoPreview";
 import { Progression } from "./components/Progression";
+import { Reminders } from "./components/Reminders";
 
 export const router = createBrowserRouter([
   {
@@ -23,6 +24,7 @@ export const router = createBrowserRouter([
       { path: "/progression", Component: Progression },
       { path: "/reflection", Component: EveningReflection },
       { path: "/history", Component: History },
+      { path: "/reminders", Component: Reminders },
     ],
   },
   {

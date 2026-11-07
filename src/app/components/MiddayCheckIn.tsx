@@ -3,6 +3,7 @@ import { useNavigate } from "react-router";
 import { saveMiddayCheckIn, getTodayEntry } from "../utils/storage";
 import { Button } from "./ui/button";
 import { motion } from "motion/react";
+import { haptic } from "../native/haptics";
 
 export function MiddayCheckIn() {
   const navigate = useNavigate();
@@ -22,6 +23,7 @@ export function MiddayCheckIn() {
   }, []);
 
   const toggleIntention = (index: number) => {
+    haptic.tap();
     const newCompleted = [...completed];
     newCompleted[index] = !newCompleted[index];
     setCompleted(newCompleted);
@@ -29,6 +31,7 @@ export function MiddayCheckIn() {
 
   const handleSave = () => {
     saveMiddayCheckIn(completed);
+    haptic.success();
     navigate("/dashboard");
   };
 

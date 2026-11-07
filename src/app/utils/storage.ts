@@ -5,6 +5,8 @@ export interface DayEntry {
     note?: string;
   };
   reflection?: string;
+  reflectionWin?: string;
+  reflectionChallenge?: string;
   createdAt: string;
   checkedInAt?: string;
   reflectedAt?: string;
@@ -14,16 +16,35 @@ export interface DailyData {
   [date: string]: DayEntry;
 }
 
-const STORAGE_KEY = "daily-brief-data";
+import { persist } from "../native/persistence";
+
+export const STORAGE_KEY = "daily-brief-data";
+
+/** YYYY-MM-DD in the device's local time zone (not UTC). */
+export function toLocalDateString(date: Date): string {
+  const y = date.getFullYear();
+  const m = String(date.getMonth() + 1).padStart(2, "0");
+  const d = String(date.getDate()).padStart(2, "0");
+  return `${y}-${m}-${d}`;
+}
 
 export function getTodayDate(): string {
-  const now = new Date();
-  return now.toISOString().split("T")[0];
+  return toLocalDateString(new Date());
 }
 
 export function getAllData(): DailyData {
-  const stored = localStorage.getItem(STORAGE_KEY);
-  return stored ? JSON.parse(stored) : {};
+  try {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    return stored ? JSON.parse(stored) : {};
+  } catch {
+    return {};
+  }
+}
+
+function writeAllData(data: DailyData): void {
+  const json = JSON.stringify(data);
+  localStorage.setItem(STORAGE_KEY, json);
+  persist(STORAGE_KEY, json);
 }
 
 export function getTodayEntry(): DayEntry | null {
@@ -41,10 +62,15 @@ export function saveIntentions(intentions: string[]): void {
     createdAt: new Date().toISOString(),
   };
   
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  writeAllData(data);
 }
 
-export function saveReflection(reflection: string): void {
+export function saveReflection(win: string, challenge: string): void {
+  const parts = [
+    win.trim() && `Win: ${win.trim()}`,
+    challenge.trim() && `Challenge: ${challenge.trim()}`,
+  ].filter(Boolean);
+  const reflection = parts.join("\n");
   const data = getAllData();
   const today = getTodayDate();
   
@@ -58,10 +84,12 @@ export function saveReflection(reflection: string): void {
   data[today] = {
     ...data[today],
     reflection,
+    reflectionWin: win.trim(),
+    reflectionChallenge: challenge.trim(),
     reflectedAt: new Date().toISOString(),
   };
   
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  writeAllData(data);
 }
 
 export function saveMiddayCheckIn(completed: boolean[], note?: string): void {
@@ -84,7 +112,7 @@ export function saveMiddayCheckIn(completed: boolean[], note?: string): void {
     checkedInAt: new Date().toISOString(),
   };
   
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  writeAllData(data);
 }
 
 export function getEntryByDate(date: string): DayEntry | null {

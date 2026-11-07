@@ -1,0 +1,67 @@
+name: Android build
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+          cache: gradle
+
+      - name: Install and build web app
+        run: |
+          npm ci
+          npm run build
+          npx cap sync android
+
+      - name: Restore upload key
+        env:
+          KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+        run: |
+          if [ -n "$KEYSTORE_BASE64" ]; then
+            echo "$KEYSTORE_BASE64" | base64 -d > "$RUNNER_TEMP/upload.jks"
+            echo "ANDROID_KEYSTORE_PATH=$RUNNER_TEMP/upload.jks" >> "$GITHUB_ENV"
+          else
+            echo "::warning::No upload key secrets set. Building the test APK only; the Play Store bundle needs the 4 ANDROID_* secrets."
+          fi
+
+      - name: Build test APK
+        working-directory: android
+        env:
+          VERSION_CODE: ${{ github.run_number }}
+        run: ./gradlew assembleDebug --no-daemon
+
+      - name: Build signed Play Store bundle (AAB)
+        if: env.ANDROID_KEYSTORE_PATH != ''
+        working-directory: android
+        env:
+          VERSION_CODE: ${{ github.run_number }}
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        run: ./gradlew bundleRelease --no-daemon
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: daily-brief-test-apk
+          path: android/app/build/outputs/apk/debug/app-debug.apk
+
+      - uses: actions/upload-artifact@v4
+        if: env.ANDROID_KEYSTORE_PATH != ''
+        with:
+          name: daily-brief-play-store-aab
+          path: android/app/build/outputs/bundle/release/app-release.aab

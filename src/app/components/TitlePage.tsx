@@ -7,7 +7,7 @@ export function TitlePage() {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
+    <div className="min-h-screen bg-background flex flex-col pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)]">
       {/* Status Bar */}
       <motion.div 
         className="max-w-md mx-auto w-full px-6"

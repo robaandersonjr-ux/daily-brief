@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
-import { getTodayEntry, getAllEntries } from "../utils/storage";
+import { getTodayEntry, getAllEntries, saveReflection, toLocalDateString } from "../utils/storage";
+import { haptic } from "../native/haptics";
 import { Button } from "./ui/button";
 import { motion } from "motion/react";
 
@@ -13,6 +14,8 @@ export function EveningReflection() {
 
   useEffect(() => {
     const entry = getTodayEntry();
+    if (entry?.reflectionWin) setWin(entry.reflectionWin);
+    if (entry?.reflectionChallenge) setChallenge(entry.reflectionChallenge);
     
     // Calculate day streak
     const allEntries = getAllEntries();
@@ -22,7 +25,7 @@ export function EveningReflection() {
     for (let i = 0; i < allEntries.length; i++) {
       const checkDate = new Date(today);
       checkDate.setDate(checkDate.getDate() - i);
-      const dateStr = checkDate.toISOString().split("T")[0];
+      const dateStr = toLocalDateString(checkDate);
       
       const dayEntry = allEntries.find(e => e.date === dateStr);
       if (dayEntry?.entry?.intentions && dayEntry.entry.intentions.length > 0) {
@@ -42,7 +45,8 @@ export function EveningReflection() {
   }, []);
 
   const handleSave = () => {
-    // Save win and challenge data could be added to storage model in future
+    saveReflection(win, challenge);
+    haptic.success();
     navigate("/dashboard");
   };
 

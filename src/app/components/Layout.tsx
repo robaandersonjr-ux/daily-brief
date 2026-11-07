@@ -1,13 +1,14 @@
 import { Outlet, Link, useLocation, useNavigate } from "react-router";
 import { Logo } from "./Logo";
-import { Plus } from "lucide-react";
+import { Plus, Bell } from "lucide-react";
+import { isNative } from "../native/platform";
 
 export function Layout() {
   const location = useLocation();
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen bg-background relative">
+    <div className="min-h-screen bg-background relative pt-[env(safe-area-inset-top)]">
       <header className="border-b border-white/10">
         <div className="max-w-md mx-auto px-6 py-4 flex items-center justify-between">
           <Link to="/dashboard" className="flex items-center gap-3">
@@ -19,6 +20,15 @@ export function Layout() {
               </div>
             </div>
           </Link>
+          {isNative && (
+            <Link
+              to="/reminders"
+              aria-label="Reminders"
+              className="size-10 rounded-full flex items-center justify-center text-white/60 hover:text-white hover:bg-white/[0.06]"
+            >
+              <Bell className="size-5" />
+            </Link>
+          )}
         </div>
       </header>
       

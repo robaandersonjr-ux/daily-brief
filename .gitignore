@@ -3,3 +3,7 @@ dist
 .vercel
 .DS_Store
 *.log
+
+# Signing keys never go in the repo
+*.jks
+*.keystore

@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
 import { ArrowLeft, Check } from "lucide-react";
-import { getAllEntries, type DayEntry } from "../utils/storage";
+import { getAllEntries, type DayEntry, toLocalDateString } from "../utils/storage";
 import { motion } from "motion/react";
 
 export function History() {
@@ -20,8 +20,8 @@ export function History() {
     yesterday.setDate(yesterday.getDate() - 1);
 
     const dateOnly = dateString;
-    const todayOnly = today.toISOString().split("T")[0];
-    const yesterdayOnly = yesterday.toISOString().split("T")[0];
+    const todayOnly = toLocalDateString(today);
+    const yesterdayOnly = toLocalDateString(yesterday);
 
     if (dateOnly === todayOnly) {
       return "Today";
@@ -117,7 +117,7 @@ export function History() {
               {entry.reflection && (
                 <div className="space-y-2">
                   <p className="text-xs text-white/40">Reflection</p>
-                  <p className="text-sm text-white/60 leading-relaxed">
+                  <p className="text-sm text-white/60 leading-relaxed whitespace-pre-line">
                     {entry.reflection}
                   </p>
                 </div>

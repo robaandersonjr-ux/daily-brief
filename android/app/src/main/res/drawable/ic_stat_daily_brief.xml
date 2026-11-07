@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Daily Brief sun mark, white on transparent, for the Android status bar. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp" android:height="24dp"
+    android:viewportWidth="80" android:viewportHeight="80">
+    <path android:fillColor="#FFFFFF" android:pathData="M40,30a10,10 0,1 1,0 20a10,10 0,1 1,0 -20z"/>
+    <path android:strokeColor="#FFFFFF" android:strokeWidth="5" android:strokeLineCap="round"
+        android:pathData="M40,8L40,22M72,40L58,40M40,72L40,58M8,40L22,40M57,23L50,30M57,57L50,50M23,57L30,50M23,23L30,30"/>
+</vector>

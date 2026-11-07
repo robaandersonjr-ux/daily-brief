@@ -1,8 +1,10 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
-import { saveIntentions, getTodayEntry, getEntryByDate, getTodayDate } from "../utils/storage";
+import { saveIntentions, getTodayEntry, getEntryByDate, getTodayDate, toLocalDateString } from "../utils/storage";
 import { Button } from "./ui/button";
 import { motion } from "motion/react";
+import { haptic } from "../native/haptics";
+import { setUpRemindersOnce } from "../native/reminders";
 
 export function MorningIntentions() {
   const navigate = useNavigate();
@@ -25,6 +27,8 @@ export function MorningIntentions() {
     const filledIntentions = intentions.filter(i => i.trim() !== "");
     if (filledIntentions.length > 0) {
       saveIntentions(intentions);
+      haptic.success();
+      setUpRemindersOnce();
       navigate("/dashboard");
     }
   };
@@ -34,7 +38,7 @@ export function MorningIntentions() {
     const today = new Date();
     const yesterday = new Date(today);
     yesterday.setDate(yesterday.getDate() - 1);
-    const yesterdayDate = yesterday.toISOString().split("T")[0];
+    const yesterdayDate = toLocalDateString(yesterday);
     
     const yesterdayEntry = getEntryByDate(yesterdayDate);
     if (yesterdayEntry?.intentions && yesterdayEntry.intentions.length > 0) {
